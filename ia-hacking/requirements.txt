@@ -1,0 +1,32 @@
+# Requisitos base de Python para el proyecto IA para Hacking Ético
+# Se añadirán más librerías a medida que los módulos las necesiten.
+
+# Manipulación de datos y computación científica
+numpy
+pandas
+scipy
+
+# Machine Learning General
+scikit-learn
+
+# Deep Learning (opciones comunes, elegir según necesidad del módulo)
+# tensorflow
+# torch
+# keras
+
+# NLP
+# nltk
+# spacy
+# transformers
+
+# Web scraping y APIs
+# requests
+# beautifulsoup4
+
+# Seguridad y Redes (ejemplos)
+# python-nmap
+# scapy
+
+# Otros
+# matplotlib # Para visualizaciones
+# jupyter # Para notebooks de experimentación

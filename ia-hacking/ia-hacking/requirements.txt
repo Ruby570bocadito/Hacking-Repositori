@@ -1,0 +1,32 @@
+# Requisitos base de Python para el proyecto IA para Hacking Ético
+
+# --- Usados por los módulos actuales ---
+numpy
+torch
+torchvision
+matplotlib
+nltk
+
+# --- Machine Learning General (Opcional, descomentar si se usan) ---
+# scikit-learn
+# pandas
+# scipy
+
+# --- Deep Learning Avanzado (Opcional, alternativas a Torch) ---
+# tensorflow
+# keras
+
+# --- NLP Avanzado (Alternativas/Complementos a NLTK) ---
+# spacy
+# transformers
+
+# --- Web scraping y APIs (Opcional) ---
+# requests
+# beautifulsoup4
+
+# --- Seguridad y Redes (Ejemplos, Opcional) ---
+# python-nmap
+# scapy
+
+# --- Otros (Opcional) ---
+# jupyter # Para notebooks de experimentación
