@@ -1,0 +1,4 @@
+specificpage.html
+anotherdir
+admin
+login
