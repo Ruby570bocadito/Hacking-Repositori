@@ -1,0 +1,63 @@
+{
+    "header_analysis": {
+        "url": "https://google.com",
+        "final_url": "https://www.google.com/",
+        "all_headers": {
+            "Date": "Wed, 04 Jun 2025 19:18:37 GMT",
+            "Expires": "-1",
+            "Cache-Control": "private, max-age=0",
+            "Content-Type": "text/html; charset=UTF-8",
+            "Strict-Transport-Security": "max-age=31536000",
+            "Content-Security-Policy-Report-Only": "object-src 'none';base-uri 'self';script-src 'nonce-VUiuFNY0sz_x9WOg2BbG8w' 'strict-dynamic' 'report-sample' 'unsafe-eval' 'unsafe-inline' https: http:;report-uri https://csp.withgoogle.com/csp/gws/other-hp",
+            "Cross-Origin-Opener-Policy": "same-origin-allow-popups; report-to=\"gws\"",
+            "Report-To": "{\"group\":\"gws\",\"max_age\":2592000,\"endpoints\":[{\"url\":\"https://csp.withgoogle.com/csp/report-to/gws/other\"}]}",
+            "Accept-CH": "Sec-CH-Prefers-Color-Scheme, Downlink, RTT, Sec-CH-UA-Form-Factors, Sec-CH-UA-Platform, Sec-CH-UA-Platform-Version, Sec-CH-UA-Full-Version, Sec-CH-UA-Arch, Sec-CH-UA-Model, Sec-CH-UA-Bitness, Sec-CH-UA-Full-Version-List, Sec-CH-UA-WoW64",
+            "Permissions-Policy": "unload=()",
+            "P3P": "CP=\"This is not a P3P policy! See g.co/p3phelp for more info.\"",
+            "Content-Encoding": "gzip",
+            "Server": "gws",
+            "X-XSS-Protection": "0",
+            "X-Frame-Options": "SAMEORIGIN",
+            "Set-Cookie": "AEC=AVh_V2jbE8PRVyEws4mEHrownhTWvOPDI5TludZAi1Woj6BljfPvzsw3IbA; expires=Mon, 01-Dec-2025 19:18:37 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=lax, NID=524=e-87QXL8IzjV1IOELhZg9Np3e6q41FziNNBXJPBNEmVWlSaSsdngEkHmTEoggvstMAytUKtzLc8YmJ8kap7FlA5IqNTU9CsQX8rgyH1fiiGwZrnhY6dnP0vYNrYrNvLmaRQw0N5U1U-tF8OLEwPLW1YWlybrFK6-RUUM6aeuicUG-AGrVS9E1IpT0IWE; expires=Thu, 04-Dec-2025 19:18:37 GMT; path=/; domain=.google.com; Secure; HttpOnly; SameSite=none",
+            "Transfer-Encoding": "chunked"
+        },
+        "security_headers_status": {
+            "Content-Security-Policy": "Not Present",
+            "Strict-Transport-Security": "max-age=31536000",
+            "X-Frame-Options": "SAMEORIGIN",
+            "X-Content-Type-Options": "Not Present",
+            "Referrer-Policy": "Not Present",
+            "Permissions-Policy": "unload=()",
+            "Feature-Policy": "Not Present",
+            "Cache-Control": "private, max-age=0",
+            "Pragma": "Not Present",
+            "Expires": "-1",
+            "Set-Cookie": [
+                {
+                    "name": "AEC",
+                    "value": "AVh_V2jbE8PRVyEws4mEHrownhTWvOPDI5TludZAi1Woj6BljfPvzsw3IbA",
+                    "expires": "Mon, 01-Dec-2025 19:18:37 GMT",
+                    "path": "/",
+                    "domain": ".google.com",
+                    "HttpOnly": true,
+                    "Secure": true,
+                    "SameSite": "lax"
+                },
+                {
+                    "name": "NID",
+                    "value": "524=e-87QXL8IzjV1IOELhZg9Np3e6q41FziNNBXJPBNEmVWlSaSsdngEkHmTEoggvstMAytUKtzLc8YmJ8kap7FlA5IqNTU9CsQX8rgyH1fiiGwZrnhY6dnP0vYNrYrNvLmaRQw0N5U1U-tF8OLEwPLW1YWlybrFK6-RUUM6aeuicUG-AGrVS9E1IpT0IWE",
+                    "expires": "Thu, 04-Dec-2025 19:18:37 GMT",
+                    "path": "/",
+                    "domain": ".google.com",
+                    "HttpOnly": true,
+                    "Secure": true,
+                    "SameSite": "none"
+                }
+            ],
+            "Server": "gws",
+            "X-Powered-By": "Not Present",
+            "X-XSS-Protection": "0"
+        },
+        "error": null
+    }
+}

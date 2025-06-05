@@ -1,7 +1,7 @@
 import socket
 import sys
 
-def scan_ports(target_host):
+def scan_ports(target_host, provided_ports=None):
     """
     Scans a target host for open common ports.
 
@@ -11,69 +11,91 @@ def scan_ports(target_host):
     Returns:
         list: A list of integers representing open ports.
     """
-    common_ports = [
+    default_common_ports = [
         21, 22, 23, 25, 53, 80, 110, 143, 443, 445,
         3306, 3389, 5900, 8000, 8080, 8443
     ]
-    open_ports = []
 
+    ports_to_scan_list = []
+    if provided_ports is None:
+        ports_to_scan_list = default_common_ports
+    else:
+        ports_to_scan_list = provided_ports
+
+    results = []
+    target_ip = None
+
+    # Informational print, acceptable before returning structured data
     print(f"[*] Scanning {target_host} for open ports...")
 
     try:
-        # Resolve hostname to IP address first.
-        # This also serves as a check if the host is resolvable.
         target_ip = socket.gethostbyname(target_host)
         print(f"[*] Target IP: {target_ip}")
     except socket.gaierror:
-        print(f"[!] Hostname {target_host} could not be resolved. Exiting.")
-        return []
+        print(f"[!] Hostname {target_host} could not be resolved. Exiting port scan.")
+        # Return early with information about the resolution failure
+        return [{'port': None, 'status': 'host_not_resolved', 'service': None, 'error_message': f"Hostname {target_host} could not be resolved."}]
     except Exception as e:
-        print(f"[!] An error occurred resolving hostname {target_host}: {e}")
-        return []
+        print(f"[!] An error occurred resolving hostname {target_host}: {e}. Exiting port scan.")
+        return [{'port': None, 'status': 'host_resolution_error', 'service': None, 'error_message': str(e)}]
 
-    for port in common_ports:
-        sock = None  # Initialize sock to None
+    for port in ports_to_scan_list: # Iterate over the correct list
+        sock = None
         try:
-            # Create a new socket for each port attempt
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(1)  # Set a timeout for the connection attempt (1 second)
+            sock.settimeout(1)
+            result_code = sock.connect_ex((target_ip, port))
 
-            result = sock.connect_ex((target_ip, port)) # connect_ex returns error indicator
+            service_name = "unknown"
+            try:
+                service_name = socket.getservbyport(port)
+            except OSError:
+                pass # Keep service_name as "unknown" if not found
 
-            if result == 0:
-                print(f"[+] Port {port} is open")
-                open_ports.append(port)
+            if result_code == 0:
+                results.append({'port': port, 'status': 'open', 'service': service_name})
+            # Optionally, include closed ports in results if desired for JSON output
             # else:
-                # Optionally, print closed ports for verbosity, but usually not desired.
-                # print(f"[-] Port {port} is closed or filtered")
+            #     results.append({'port': port, 'status': 'closed', 'service': service_name})
 
         except socket.error as e:
-            # This might catch errors if the IP is valid but host is down/unreachable at socket creation
-            print(f"[!] Socket error while connecting to {target_ip}:{port} - {e}")
+            results.append({'port': port, 'status': 'error', 'service': 'unknown', 'error_message': f"Socket error: {e}"})
         except Exception as e:
-            # Catch any other unexpected errors for a specific port
-            print(f"[!] An unexpected error occurred with port {port}: {e}")
+            results.append({'port': port, 'status': 'error', 'service': 'unknown', 'error_message': f"Unexpected error: {e}"})
         finally:
             if sock:
                 sock.close()
 
-    return open_ports
+    return results
+
+def print_results(results, target_host):
+    """Prints port scan results in a human-readable format."""
+    print(f"\n--- Port Scan Results for {target_host} ---")
+
+    if not results:
+        print("  No ports were scanned or an unexpected error occurred before scanning.")
+        return
+
+    # Check for host resolution errors first
+    if results[0].get('status') == 'host_not_resolved' or results[0].get('status') == 'host_resolution_error':
+        print(f"  [!] Error: {results[0]['error_message']}")
+        return
+
+    open_ports_found = False
+    for res in results:
+        if res['status'] == 'open':
+            print(f"  [+] Port {res['port']} is open (Service: {res.get('service', 'unknown')})")
+            open_ports_found = True
+        # Optionally print errors for specific ports if they are included in results
+        # elif res['status'] == 'error':
+        #     print(f"  [!] Error scanning port {res['port']}: {res.get('error_message', 'Unknown error')}")
+
+    if not open_ports_found:
+        print(f"  No common ports found open on {target_host} from the list scanned.")
 
 if __name__ == '__main__':
-    # Example usage:
-    # Using a public, generally available host for demonstration.
-    # Replace with a host/IP you have permission to scan.
-    # Scanning "scanme.nmap.org" which is explicitly for testing scanners.
-    host_to_scan = "scanme.nmap.org"
-    # Or use an IP directly: host_to_scan = "45.33.32.156" (IP for scanme.nmap.org at time of writing)
+    host_to_scan_example = "scanme.nmap.org"
 
-    print(f"[*] Starting port scan on {host_to_scan}")
-
-    found_open_ports = scan_ports(host_to_scan)
-
-    if found_open_ports:
-        print("\n[*] Summary of open ports:")
-        for port_num in found_open_ports:
-            print(f"Port {port_num} is open")
-    else:
-        print(f"\n[*] No common ports found open on {host_to_scan}, or host was unreachable.")
+    print(f"[*] Example Port Scan for: {host_to_scan_example}")
+    scan_results = scan_ports(host_to_scan_example)
+    print_results(scan_results, host_to_scan_example)

@@ -1,0 +1,48 @@
+# AdvancedBountyScanner/configs/sample-config.yaml
+# This is a sample configuration file for AdvancedBountyScanner.
+# Users can copy this to, for example, 'my_config.yaml' and customize it.
+
+# Default User-Agent string for HTTP requests
+user_agent: "MyCustomScanner/1.1 (AdvancedBountyScanner SampleConfig)"
+
+# Default timeout for HTTP requests in seconds
+timeout: 15
+
+# Proxy configuration (uncomment and set to use a proxy)
+# proxy:
+#   http: "http://127.0.0.1:8080"
+#   https: "http://127.0.0.1:8080"
+  # socks5: "socks5://127.0.0.1:1080" # Example for SOCKS proxy
+
+# Maximum number of concurrent requests (for modules that support concurrency)
+max_concurrent_requests: 5
+
+# Rate limit for requests (requests per second, 0 means no limit)
+# Note: Actual enforcement depends on module implementation.
+rate_limit: 0
+
+# Default headers to be sent with every request (can be overridden by modules)
+# headers:
+#   Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'
+#   Accept-Language: 'en-US,en;q=0.5'
+#   X-Custom-Static-Header: 'ScannerValue'
+
+# Default paths for wordlists (relative to a base 'wordlists' directory or absolute)
+# These can be overridden by specific module configurations or CLI arguments if supported.
+# wordlists:
+#   subdomains: 'common_subdomains.txt' # Example
+#   directories: 'common_directories.txt' # Example
+#   sqli_payloads: 'sqli_payloads.txt' # Example
+#   xss_payloads: 'xss_payloads.txt' # Example
+
+# Default output directory for scan results
+# output_directory: "results"
+
+# Module-specific configurations can be added here in their own sections if needed, e.g.:
+# sqli_scanner:
+#   custom_payload_file: "wordlists/my_sqli_payloads.txt"
+#   sensitivity_level: "high"
+
+# xss_scanner:
+#   check_for_dom_xss: false
+#   custom_xss_vectors: "wordlists/my_xss_vectors.txt"

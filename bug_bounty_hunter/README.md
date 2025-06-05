@@ -1,6 +1,6 @@
 # Bug Bounty Hunter Tool
 
-A simple command-line tool to assist in bug bounty reconnaissance by automating common tasks like subdomain enumeration, port scanning, directory bruteforcing, and Wayback Machine URL discovery.
+A simple command-line tool to assist in bug bounty reconnaissance by automating common tasks like subdomain enumeration, port scanning, directory bruteforcing, Wayback Machine URL discovery, HTTP header analysis, and robots.txt/sitemap parsing.
 
 ## Features
 
@@ -8,13 +8,15 @@ A simple command-line tool to assist in bug bounty reconnaissance by automating 
 *   **Port Scanning:** Scans for common open TCP ports on a target.
 *   **Directory/File Bruteforcing:** Discovers accessible directories and files on a web server using a customizable wordlist.
 *   **Wayback Machine URL Fetching:** Retrieves historical URLs for a domain from the Wayback Machine.
+*   **HTTP Header Analysis:** Fetches and analyzes HTTP headers, focusing on security-related headers.
+*   **Robots.txt and Sitemap.xml Parsing:** Fetches and parses `robots.txt` and linked sitemaps to discover disallowed paths and listed URLs.
 
 ## Project Structure
 
 *   `src/`: Contains the main executable script (`bug_bounty_tool.py`).
 *   `modules/`: Houses the individual scanning modules (e.g., `subdomain_scanner.py`, `port_scanner.py`).
 *   `wordlists/`: Stores default wordlists used by the scanning modules (e.g., `common_subdomains.txt`, `common_directories.txt`).
-*   `reports/`: Intended for saving scan reports - functionality to be added in future updates.
+*   `reports/`: Default directory for saving JSON scan reports.
 
 ## Prerequisites
 
@@ -47,21 +49,29 @@ A simple command-line tool to assist in bug bounty reconnaissance by automating 
     ```
     If you do this, you can run the tool like `./src/bug_bounty_tool.py ...`
 
-## Usage
+## Command-line Arguments
+
+*   **`target`**: (Required) The primary target for the scans.
+    *   For `subdomain`, `port`, and `wayback` scans: a domain name (e.g., `example.com`) or IP address (for port scan).
+    *   For `dir` (directory bruteforce), `header` (HTTP headers), and `robots` (robots.txt/sitemap) scans: a base URL (e.g., `http://example.com` or `https://example.com`). The script will attempt to prepend `http://` if a scheme is missing for these scan types.
+
+*   **`--scans <scan_type_1> [<scan_type_2> ...]`**: (Required) One or more scan types to perform.
+    *   Choices: `subdomain`, `port`, `dir`, `wayback`, `header`, `robots`, `all`.
+    *   `all` will run all available scan types.
+
+*   **`--json_output <filepath>`**: (Optional) Save all scan results to the specified JSON file.
+    *   If a filename without a path is given (e.g., `results.json`), it's saved in the `reports/` directory (which will be created if it doesn't exist).
+    *   If a full path is given (e.g., `/path/to/results.json`), it's saved at that location.
+
+*   **`--subdomain_wordlist <filepath>`**: (Optional) Path to a custom wordlist for subdomain scanning. Defaults to `wordlists/common_subdomains.txt`.
+
+*   **`--dir_wordlist <filepath>`**: (Optional) Path to a custom wordlist for directory/file bruteforcing. Defaults to `wordlists/common_directories.txt`.
+
+## Usage Examples
 
 All commands should be run from the root of the `bug_bounty_hunter` project directory.
 
-The main script is `src/bug_bounty_tool.py`.
-
-**Target Argument:**
-*   For subdomain, port, and wayback scans, the `target` can be a domain name (e.g., `example.com`) or an IP address (for port scan).
-*   For the directory/file bruteforce (`dir`) scan, the `target` should be a full URL (e.g., `http://example.com` or `https://example.com`). The script will attempt to prepend `http://` if a scheme is missing.
-
 **Running Specific Scans:**
-
-```bash
-python3 src/bug_bounty_tool.py <target> --scans <scan_type_1> [<scan_type_2> ...]
-```
 
 *   **Subdomain Scan:**
     ```bash
@@ -79,15 +89,23 @@ python3 src/bug_bounty_tool.py <target> --scans <scan_type_1> [<scan_type_2> ...
     ```bash
     python3 src/bug_bounty_tool.py example.com --scans wayback
     ```
+*   **HTTP Header Analysis:**
+    ```bash
+    python3 src/bug_bounty_tool.py https://example.com --scans header
+    ```
+*   **Robots.txt and Sitemap Analysis:**
+    ```bash
+    python3 src/bug_bounty_tool.py http://example.com --scans robots
+    ```
 *   **Multiple Specific Scans:**
     ```bash
-    python3 src/bug_bounty_tool.py example.com --scans subdomain port
+    python3 src/bug_bounty_tool.py example.com --scans subdomain port header
     ```
 
 **Running All Scans:**
 
 ```bash
-python3 src/bug_bounty_tool.py <target> --scans all
+python3 src/bug_bounty_tool.py <target_url_or_domain> --scans all
 ```
 *Example:*
 ```bash
@@ -104,7 +122,19 @@ python3 src/bug_bounty_tool.py http://scanme.nmap.org --scans all
     ```bash
     python3 src/bug_bounty_tool.py http://example.com --scans dir --dir_wordlist path/to/your/directories.txt
     ```
-    If custom wordlists are not provided, the tool defaults to using `wordlists/common_subdomains.txt` and `wordlists/common_directories.txt` respectively.
+
+**Saving Output to JSON:**
+
+*   **Save all scan results for a target to a JSON file in the `reports/` directory:**
+    ```bash
+    python3 src/bug_bounty_tool.py https://example.com --scans all --json_output results.json
+    ```
+    *(This will create `reports/results.json`)*
+
+*   **Save specific scan results to a JSON file with a specific path:**
+    ```bash
+    python3 src/bug_bounty_tool.py example.com --scans subdomain wayback --json_output /tmp/sub_wayback_results.json
+    ```
 
 ## Disclaimer
 

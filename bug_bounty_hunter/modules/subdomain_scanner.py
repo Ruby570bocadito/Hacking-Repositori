@@ -36,50 +36,63 @@ def find_subdomains(domain, wordlist_path=None):
 
     subdomain_list = load_wordlist(wordlist_path)
     if not subdomain_list:
+        # This print is acceptable as it's an early exit / config error
         print(f"[*] No subdomains loaded from wordlist: {wordlist_path}. Aborting subdomain scan.")
         return []
 
-    found_subdomains = []
-
+    results = []
+    # This print is acceptable as it's informational about the process
     print(f"[*] Scanning for subdomains of {domain} using wordlist: {os.path.basename(wordlist_path)}...")
 
     for sub in subdomain_list:
         subdomain_url = f"{sub}.{domain}"
         try:
             ip_address = socket.gethostbyname(subdomain_url)
-            print(f"[+] Found: {subdomain_url} -> {ip_address}")
-            found_subdomains.append((subdomain_url, ip_address))
+            results.append({'subdomain': subdomain_url, 'ip': ip_address, 'status': 'found'})
         except socket.gaierror:
-            # socket.gaierror means the address-related error occurred, e.g., name not resolved
-            print(f"[-] Not found or could not resolve: {subdomain_url}")
+            results.append({'subdomain': subdomain_url, 'ip': None, 'status': 'not_resolved'})
         except Exception as e:
-            print(f"[!] An error occurred while checking {subdomain_url}: {e}")
+            results.append({'subdomain': subdomain_url, 'ip': None, 'status': f'error: {e}'})
 
-    return found_subdomains
+    return results
+
+def print_results(results, domain):
+    """Prints subdomain scan results in a human-readable format."""
+    print(f"\n--- Subdomain Scan Results for {domain} ---")
+    found_any = False
+    if not results:
+        print("  No attempts made or wordlist was empty.")
+        return
+
+    for res in results:
+        if res['status'] == 'found':
+            print(f"  [+] Found: {res['subdomain']} -> {res['ip']}")
+            found_any = True
+
+    if not found_any:
+        print(f"  No active subdomains found for {domain} from the provided list.")
+    # Optionally, print not_resolved or errors for verbosity:
+    # for res in results:
+    #     if res['status'] == 'not_resolved':
+    #         print(f"  [-] Not resolved: {res['subdomain']}")
+    #     elif 'error' in res['status']:
+    #         print(f"  [!] Error for {res['subdomain']}: {res['status']}")
+
 
 if __name__ == '__main__':
-    # Example usage:
-    # Note: Replace "example.com" with a domain you have permission to test,
-    # or a domain you own. For demonstration, this might not resolve all subdomains.
-    # Using a public domain like "google.com" for a more likely successful demonstration.
-    target_domain = "google.com"
+    target_domain_example = "google.com"
 
+    print(f"[*] Example Subdomain Scan for: {target_domain_example}")
     # It's good practice to ensure the base domain itself is resolvable first,
     # though this script focuses on subdomains.
     try:
-        socket.gethostbyname(target_domain)
+        socket.gethostbyname(target_domain_example)
     except socket.gaierror:
-        print(f"[!] The base domain {target_domain} itself could not be resolved. Exiting.")
+        print(f"[!] The base domain {target_domain_example} itself could not be resolved. Exiting.")
         exit()
     except Exception as e:
-        print(f"[!] An error occurred resolving the base domain {target_domain}: {e}")
+        print(f"[!] An error occurred resolving the base domain {target_domain_example}: {e}")
         exit()
 
-    active_subdomains = find_subdomains(target_domain)
-
-    if active_subdomains:
-        print("\n[*] Summary of found subdomains:")
-        for sub_url, ip in active_subdomains:
-            print(f"{sub_url}: {ip}")
-    else:
-        print("\n[*] No subdomains found from the predefined list.")
+    scan_results = find_subdomains(target_domain_example)
+    print_results(scan_results, target_domain_example)

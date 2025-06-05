@@ -1,0 +1,2 @@
+PyYAML>=5.0
+requests>=2.20 # Already used by core_engine, good to list it here too
